@@ -1,0 +1,38 @@
+[package]
+name = "badakrohit/online-examination-portal"
+version = "1.0.0"
+description = "Enterprise Online Examination & Assessment Portal for Wasmer WASIX"
+license = "MIT"
+
+[[module]]
+name = "php"
+source = "wasmer/php"
+
+[dependencies]
+"wasmer/php" = "^8.2"
+
+[[command]]
+name = "serve"
+module = "php"
+runner = "https://webc.org/runner/wcgi"
+
+[command.annotations.wcgi]
+dialect = "rfc-3875"
+script = "/app/router.php"
+
+[fs]
+"/app" = "."
+
+[env]
+DB_HOST = "127.0.0.1"
+DB_USER = "root"
+DB_PASS = ""
+DB_NAME = "exam_portal"
+APP_TIMEZONE = "Asia/Kolkata"
+APP_NAME = "Online Examination Portal"
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = "587"
+SMTP_USER = "badakrohit@gmail.com"
+SMTP_PASS = "trkxotmhbbnkcofq"
+SMTP_FROM = "badakrohit@gmail.com"
+SMTP_FROM_NAME = "Online Examination Portal"

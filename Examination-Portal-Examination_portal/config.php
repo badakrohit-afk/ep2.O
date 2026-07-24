@@ -1,27 +1,45 @@
 <?php
 // config.php — Database & SMTP configuration for Online Examination Portal
+// Wasmer & Environment Configuration
 if (session_status() === PHP_SESSION_NONE) {
+    $session_dir = sys_get_temp_dir() . '/sessions';
+    if (!file_exists($session_dir)) {
+        @mkdir($session_dir, 0777, true);
+    }
+    if (is_dir($session_dir) && is_writable($session_dir)) {
+        session_save_path($session_dir);
+    }
     session_start();
 }
-date_default_timezone_set('Asia/Kolkata');
+date_default_timezone_set(getenv('APP_TIMEZONE') ?: 'Asia/Kolkata');
 
-define('DB_HOST', '127.0.0.1');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'exam_portal');
-define('BASE_URL', 'http://localhost:8001');
+// Ensure uploads directory exists for Wasmer filesystem
+$upload_dir = __DIR__ . '/uploads';
+if (!file_exists($upload_dir)) {
+    @mkdir($upload_dir, 0777, true);
+}
 
-// SMTP Configuration (Gmail SMTP)
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', 'badakrohit@gmail.com');
-define('SMTP_PASS', 'trkxotmhbbnkcofq');
-define('SMTP_FROM', 'badakrohit@gmail.com');
-define('SMTP_FROM_NAME', 'Online Examination Portal');
+// Database Connection Settings (Wasmer Env & Local Fallback)
+define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+define('DB_NAME', getenv('DB_NAME') ?: 'exam_portal');
+
+// Dynamic Base URL for Wasmer Edge & Local Server
+$detected_host = isset($_SERVER['HTTP_HOST']) ? (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] : 'http://localhost:8001';
+define('BASE_URL', rtrim(getenv('BASE_URL') ?: $detected_host, '/'));
+
+// SMTP Configuration (Gmail SMTP & Wasmer Env)
+define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
+define('SMTP_PORT', (int)(getenv('SMTP_PORT') ?: 587));
+define('SMTP_USER', getenv('SMTP_USER') ?: 'badakrohit@gmail.com');
+define('SMTP_PASS', getenv('SMTP_PASS') ?: 'trkxotmhbbnkcofq');
+define('SMTP_FROM', getenv('SMTP_FROM') ?: 'badakrohit@gmail.com');
+define('SMTP_FROM_NAME', getenv('SMTP_FROM_NAME') ?: 'Online Examination Portal');
 
 // Application settings
-define('APP_NAME', 'Online Examination Portal');
-define('ADMIN_EMAIL', 'balajichaughule@gmail.com');
+define('APP_NAME', getenv('APP_NAME') ?: 'Online Examination Portal');
+define('ADMIN_EMAIL', getenv('ADMIN_EMAIL') ?: 'balajichaughule@gmail.com');
 
 try {
     // First connect without DB to check if it exists

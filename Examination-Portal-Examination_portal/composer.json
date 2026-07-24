@@ -1,0 +1,22 @@
+{
+    "name": "badakrohit/online-examination-portal",
+    "description": "Enterprise Online Examination & Assessment Portal for Wasmer WASIX",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-json": "*",
+        "ext-session": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "includes/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
