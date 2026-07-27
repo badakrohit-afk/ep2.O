@@ -80,7 +80,12 @@ require_once dirname(__DIR__) . '/includes/header.php';
         <p>Add, edit or delete MCQ questions for your exams</p>
     </div>
     <?php if ($exam): ?>
-        <a href="create_exam.php" class="btn btn-outline btn-sm">+ New Exam</a>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="openImportExcelModal()" style="display:inline-flex; align-items:center; gap:6px; background:#FF6B00; border:none; color:#ffffff; font-weight:600; box-shadow:0 4px 12px rgba(255,107,0,0.25);">
+                📥 Import Excel
+            </button>
+            <a href="create_exam.php" class="btn btn-outline btn-sm">+ New Exam</a>
+        </div>
     <?php endif; ?>
 </div>
 
@@ -293,6 +298,174 @@ function editQuestion(q) {
 }
 function closeModal() { document.getElementById('edit-modal').style.display='none'; }
 document.getElementById('edit-modal').addEventListener('click', function(e){if(e.target===this)closeModal();});
+</script>
+
+<!-- Import Excel / CSV Modal -->
+<div id="importExcelModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+    <div style="background:#ffffff; border-radius:16px; width:100%; max-width:540px; box-shadow:0 20px 40px rgba(0,0,0,0.25); overflow:hidden; border:1px solid #e2e8f0; animation:fadeIn 0.25s ease;">
+        
+        <!-- Modal Header -->
+        <div style="background:#1e293b; color:#ffffff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; font-size:1.15rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+                <span>📥</span> Import Questions from Excel / CSV
+            </h3>
+            <button type="button" onclick="closeImportExcelModal()" style="background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer; line-height:1; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div style="padding:24px; color:#1e293b;">
+            
+            <!-- Sample Download Template -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #FF6B00; border-radius:10px; padding:14px 16px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <strong style="color:#1e293b; font-size:0.9rem;">Need a sample file?</strong>
+                    <p style="margin:2px 0 0 0; color:#64748b; font-size:0.8rem;">Download template with pre-filled columns</p>
+                </div>
+                <a href="<?= BASE_URL ?>/api/download_sample_template.php" class="btn btn-sm" style="background:#fff; border:1.5px solid #FF6B00; color:#FF6B00; font-weight:600; font-size:0.82rem; text-decoration:none; padding:6px 14px; border-radius:8px;">
+                    ⬇️ Download Template
+                </a>
+            </div>
+
+            <!-- File Drop Zone -->
+            <form id="importExcelForm" enctype="multipart/form-data" onsubmit="handleImportExcelSubmit(event)">
+                <input type="hidden" name="exam_id" value="<?= (int)$exam_id ?>">
+                
+                <div id="excel_dropzone" style="border:2px dashed #cbd5e1; border-radius:12px; padding:30px 20px; text-align:center; background:#fafafa; cursor:pointer; transition:all 0.2s;" onclick="document.getElementById('excel_file_input').click()" ondragover="event.preventDefault(); this.style.borderColor='#FF6B00'; this.style.background='rgba(255,107,0,0.04)';" ondragleave="this.style.borderColor='#cbd5e1'; this.style.background='#fafafa';" ondrop="handleExcelFileDrop(event)">
+                    
+                    <div style="font-size:2.5rem; margin-bottom:8px;">📊</div>
+                    <p style="margin:0; font-weight:600; color:#334155; font-size:0.95rem;">Click to upload or drag & drop</p>
+                    <p style="margin:4px 0 0 0; color:#94a3b8; font-size:0.8rem;">Supports .xlsx, .xls, or .csv files</p>
+                    
+                    <input type="file" id="excel_file_input" name="excel_file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="handleExcelFileSelect(this)">
+                    
+                    <div id="excel_file_info" style="display:none; margin-top:12px; padding:8px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; align-items:center; gap:8px; color:#FF6B00; font-weight:600; font-size:0.85rem;">
+                        <span id="excel_file_name">selected_file.xlsx</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="import_progress_container" style="display:none; margin-top:16px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#64748b; margin-bottom:6px;">
+                        <span>Uploading & Parsing file...</span>
+                        <span id="import_progress_percent">0%</span>
+                    </div>
+                    <div style="background:#e2e8f0; border-radius:99px; height:8px; overflow:hidden;">
+                        <div id="import_progress_bar" style="background:#FF6B00; height:100%; width:0%; transition:width 0.3s ease;"></div>
+                    </div>
+                </div>
+
+                <!-- Alert Result Summary Box -->
+                <div id="import_result_box" style="display:none; margin-top:16px; border-radius:10px; padding:14px; font-size:0.85rem;"></div>
+
+                <!-- Modal Footer Actions -->
+                <div style="margin-top:24px; display:flex; justify-content:flex-end; gap:12px;">
+                    <button type="button" onclick="closeImportExcelModal()" class="btn btn-outline" style="border-color:#cbd5e1; color:#475569;">Cancel</button>
+                    <button type="submit" id="btn_import_submit" class="btn" style="background:#FF6B00; color:#fff; font-weight:600; padding:10px 24px; border:none; border-radius:8px; cursor:pointer;">
+                        🚀 Start Import
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openImportExcelModal() {
+    document.getElementById('importExcelModal').style.display = 'flex';
+}
+function closeImportExcelModal() {
+    document.getElementById('importExcelModal').style.display = 'none';
+    document.getElementById('import_result_box').style.display = 'none';
+    document.getElementById('import_progress_container').style.display = 'none';
+}
+function handleExcelFileSelect(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById('excel_file_name').innerText = '📄 ' + input.files[0].name;
+        document.getElementById('excel_file_info').style.display = 'inline-flex';
+    }
+}
+function handleExcelFileDrop(e) {
+    e.preventDefault();
+    document.getElementById('excel_dropzone').style.borderColor = '#cbd5e1';
+    document.getElementById('excel_dropzone').style.background = '#fafafa';
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        const input = document.getElementById('excel_file_input');
+        input.files = e.dataTransfer.files;
+        handleExcelFileSelect(input);
+    }
+}
+function handleImportExcelSubmit(e) {
+    e.preventDefault();
+    const fileInput = document.getElementById('excel_file_input');
+    if (!fileInput.files || !fileInput.files[0]) {
+        alert('Please select an Excel or CSV file to upload.');
+        return;
+    }
+
+    const btn = document.getElementById('btn_import_submit');
+    const progressBox = document.getElementById('import_progress_container');
+    const progressBar = document.getElementById('import_progress_bar');
+    const progressPercent = document.getElementById('import_progress_percent');
+    const resultBox = document.getElementById('import_result_box');
+
+    btn.disabled = true;
+    btn.innerText = 'Importing...';
+    progressBox.style.display = 'block';
+    progressBar.style.width = '40%';
+    progressPercent.innerText = '40%';
+    resultBox.style.display = 'none';
+
+    const formData = new FormData(document.getElementById('importExcelForm'));
+
+    fetch('<?= BASE_URL ?>/api/import_questions.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        progressBar.style.width = '100%';
+        progressPercent.innerText = '100%';
+        btn.disabled = false;
+        btn.innerText = '🚀 Start Import';
+
+        if (data.success) {
+            resultBox.style.background = 'rgba(16,185,129,0.08)';
+            resultBox.style.border = '1px solid rgba(16,185,129,0.3)';
+            resultBox.style.color = '#059669';
+            
+            let html = '<strong>' + data.message + '</strong>';
+            if (data.details && data.details.length > 0) {
+                html += '<ul style="margin:8px 0 0 0; padding-left:18px; font-size:0.8rem; color:#475569; max-height:120px; overflow-y:auto;">';
+                data.details.forEach(d => { html += '<li>' + d + '</li>'; });
+                html += '</ul>';
+            }
+            resultBox.innerHTML = html;
+            resultBox.style.display = 'block';
+
+            if (data.imported > 0) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1600);
+            }
+        } else {
+            resultBox.style.background = 'rgba(239,68,68,0.08)';
+            resultBox.style.border = '1px solid rgba(239,68,68,0.3)';
+            resultBox.style.color = '#dc2626';
+            resultBox.innerHTML = '<strong>❌ Import Failed:</strong> ' + (data.message || 'Unknown error');
+            resultBox.style.display = 'block';
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerText = '🚀 Start Import';
+        resultBox.style.background = 'rgba(239,68,68,0.08)';
+        resultBox.style.border = '1px solid rgba(239,68,68,0.3)';
+        resultBox.style.color = '#dc2626';
+        resultBox.innerHTML = '<strong>❌ Request Error:</strong> ' + err.message;
+        resultBox.style.display = 'block';
+    });
+}
+document.getElementById('importExcelModal').addEventListener('click', function(e){if(e.target===this)closeImportExcelModal();});
 </script>
 
 <?php endif; // if $exam ?>
