@@ -70,7 +70,7 @@ elseif (!empty($_FILES['excel_file']['tmp_name']) && $_FILES['excel_file']['erro
             $line = trim($line);
             if ($line === '') continue;
             $delimiter = (strpos($line, "\t") !== false) ? "\t" : ((strpos($line, ";") !== false) ? ";" : ",");
-            $cols = str_getcsv($line, $delimiter);
+            $cols = str_getcsv($line, $delimiter, '"', '\\');
             if (array_filter($cols)) {
                 $raw_rows[] = array_map('trim', $cols);
             }

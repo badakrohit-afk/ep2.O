@@ -23,7 +23,12 @@ function is_logged_in(): bool {
 }
 
 function get_role(): string {
-    return $_SESSION['user_role'] ?? '';
+    return $_SESSION['user_role'] ?? $_SESSION['role'] ?? '';
+}
+
+function has_role(string $role): bool {
+    $cur = get_role();
+    return $cur === $role;
 }
 
 function require_role(string ...$roles): void {
