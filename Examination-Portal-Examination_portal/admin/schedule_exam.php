@@ -53,85 +53,21 @@ require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
 <style>
-/* Chakravyuh Animation Styles */
-.chakravyuh-btn-container {
-    position: relative;
-    display: inline-block;
-    border-radius: 50px;
-    padding: 3px;
-}
-.chakra-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.chakra-ring.ring-1 {
-    border: 2px dashed #A67C52;
-    margin: -3px;
-    animation: spinClockwise 8s linear infinite;
-}
-.chakra-ring.ring-2 {
-    border: 1.5px dotted #8C6239;
-    margin: -1px;
-    animation: spinCounterClockwise 5s linear infinite;
-}
-.chakravyuh-btn-container:hover .chakra-ring {
-    opacity: 1;
-}
-.chakravyuh-trigger {
-    position: relative;
-    border-radius: 50px;
-    padding: 10px 24px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-    height: 42px;
-    border: none;
-    cursor: pointer;
-    z-index: 2;
-    background: #A67C52;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s;
-}
-.chakravyuh-trigger:hover {
-    background: #7A5C48;
-    box-shadow: 0 0 15px rgba(166, 124, 82, 0.4);
-}
-@keyframes chakravyuhIn {
-    0% { transform: scale(0) rotate(-360deg); opacity: 0; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-.chakravyuh-menu {
+.add-exam-menu {
     display: none;
     position: absolute;
     right: 0;
-    top: 50px;
-    background: #0f0f20;
+    top: 48px;
+    background: #1e1e2d;
     border: 1px solid var(--border);
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     z-index: 100;
     min-width: 160px;
     overflow: hidden;
-    transform-origin: top right;
 }
-.show-menu {
+.add-exam-menu.show-menu {
     display: block !important;
-    animation: chakravyuhIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-@keyframes spinClockwise {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-@keyframes spinCounterClockwise {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0deg); }
 }
 </style>
 
@@ -140,17 +76,15 @@ require_once dirname(__DIR__) . '/includes/header.php';
         <h2>📅 Master Exam Schedule</h2>
         <p>View, configure, and schedule examinations created by Faculty and Super Admin</p>
     </div>
-    <div class="chakravyuh-btn-container">
-        <div class="chakra-ring ring-1"></div>
-        <div class="chakra-ring ring-2"></div>
-        <button onclick="toggleAddExamMenu(event)" class="btn btn-primary chakravyuh-trigger">
+    <div style="position: relative; display: inline-block;">
+        <button onclick="toggleAddExamMenu(event)" class="btn btn-primary" style="border-radius: 50px; padding: 10px 24px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; height: 42px; background: #A67C52; border: none; cursor: pointer; color: #fff;">
             <span>+ Add Exam</span>
         </button>
-        <div id="add-exam-menu" class="chakravyuh-menu">
-            <a href="create_exam.php" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+        <div id="add-exam-menu" class="add-exam-menu">
+            <a href="create_exam.php" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">
                 <span>📝</span> Quiz Exam
             </a>
-            <a href="manage_coding_problems.php" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; border-top: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+            <a href="manage_coding_problems.php" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">
                 <span>💻</span> Coding Exam
             </a>
         </div>
@@ -163,6 +97,10 @@ function toggleAddExamMenu(e) {
     menu.classList.toggle('show-menu');
 }
 document.addEventListener('click', function() {
+    const menu = document.getElementById('add-exam-menu');
+    if (menu) menu.classList.remove('show-menu');
+});
+</script>
     const menu = document.getElementById('add-exam-menu');
     if (menu) menu.classList.remove('show-menu');
 });
