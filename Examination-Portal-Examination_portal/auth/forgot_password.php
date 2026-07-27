@@ -30,20 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Construct HTML email with OTP
             $subject = "🔐 Your Password Reset OTP Code - " . APP_NAME;
             $body = "
-            <div style='font-family: Poppins, Arial, sans-serif; background-color: #F5F0E6; padding: 30px;'>
-                <div style='max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 14px; padding: 32px; border: 1.5px solid #A67C52; box-shadow: 0 10px 25px rgba(0,0,0,0.08);'>
+            <div style='font-family: Poppins, Arial, sans-serif; background-color: #f8fafc; padding: 30px;'>
+                <div style='max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 32px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.06);'>
                     <div style='text-align: center; margin-bottom: 20px;'>
-                        <h2 style='color: #A67C52; margin: 0; font-size: 1.5rem;'>Online Examination Portal</h2>
-                        <p style='color: #7A5C48; font-size: 0.9rem; margin-top: 4px;'>Password Reset Request</p>
+                        <div style='display: inline-block; width: 56px; height: 56px; line-height: 56px; border-radius: 16px; background: rgba(255, 107, 0, 0.1); color: #ff6b00; font-size: 1.8rem; text-align: center;'>🎓</div>
+                        <h2 style='color: #1e293b; margin: 12px 0 0 0; font-size: 1.4rem;'>Online Examination Portal</h2>
+                        <p style='color: #ff6b00; font-weight: 600; font-size: 0.9rem; margin-top: 4px;'>Password Reset Request</p>
                     </div>
-                    <p style='color: #2E2E2E; font-size: 0.95rem;'>Hello <strong>" . h($user['name']) . "</strong>,</p>
-                    <p style='color: #555555; font-size: 0.9rem; line-height: 1.6;'>You requested to reset your password. Use the following 6-digit One-Time Password (OTP) to complete your verification:</p>
+                    <p style='color: #1e293b; font-size: 0.95rem;'>Hello <strong>" . h($user['name']) . "</strong>,</p>
+                    <p style='color: #475569; font-size: 0.9rem; line-height: 1.6;'>You requested to reset your password. Use the following 6-digit One-Time Password (OTP) to complete your verification:</p>
                     
-                    <div style='background: rgba(166, 124, 82, 0.08); border: 2px dashed #A67C52; font-size: 2.4rem; font-weight: 800; letter-spacing: 10px; text-align: center; color: #7A5C48; padding: 18px; border-radius: 10px; margin: 24px 0;'>
+                    <div style='background: rgba(255, 107, 0, 0.08); border: 2px dashed #ff6b00; font-size: 2.4rem; font-weight: 800; letter-spacing: 10px; text-align: center; color: #ff6b00; padding: 18px; border-radius: 12px; margin: 24px 0;'>
                         " . $otp . "
                     </div>
                     
-                    <p style='color: #888888; font-size: 0.82rem; text-align: center; margin-bottom: 0;'>
+                    <p style='color: #94a3b8; font-size: 0.82rem; text-align: center; margin-bottom: 0;'>
                         ⏰ This OTP is valid for <strong>15 minutes</strong>.<br>If you did not request a password reset, please ignore this email.
                     </p>
                 </div>
@@ -81,8 +82,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: 'Poppins', -apple-system, sans-serif;
-            background-color: #F5F0E6;
-            color: #2E2E2E;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .btn-primary-orange {
+            background: #ff6b00 !important;
+            border-color: #ff6b00 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(255, 107, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-primary-orange:hover {
+            background: #e05e00 !important;
+            box-shadow: 0 6px 18px rgba(255, 107, 0, 0.4);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -90,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-page">
     <div class="auth-card">
         <div class="auth-logo">
-            <span class="logo-icon"><i class="fa-solid fa-key" style="color: #A67C52;"></i></span>
+            <span class="logo-icon"><i class="fa-solid fa-key" style="color: #ff6b00;"></i></span>
             <h1>Forgot Password</h1>
             <p>Enter your registered email to receive a 6-digit OTP code</p>
         </div>
@@ -102,15 +116,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" action="">
             <div class="form-group">
                 <label class="form-label" for="email">Registered Email Address</label>
-                <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" value="<?= h($_POST['email'] ?? '') ?>" required autofocus>
+                <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" value="<?= h($_POST['email'] ?? '') ?>" required autofocus style="border-color: #cbd5e1;">
             </div>
-            <button type="submit" class="btn btn-primary btn-block" style="background:#A67C52; border-color:#A67C52; font-weight:600;">
+            <button type="submit" class="btn btn-block btn-primary-orange">
                 Send OTP via Email ✉️
             </button>
         </form>
 
         <div class="divider"><span>Remember your password?</span></div>
-        <a href="login.php" class="btn btn-outline btn-block" style="justify-content:center;">← Back to Login</a>
+        <a href="login.php" class="btn btn-outline btn-block" style="justify-content:center; border-color:#cbd5e1; color:#475569; font-weight:600;">← Back to Login</a>
     </div>
 </div>
 </body>

@@ -59,15 +59,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: 'Poppins', -apple-system, sans-serif;
-            background-color: #F5F0E6;
-            color: #2E2E2E;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
         .otp-input-field {
             font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: 8px;
             text-align: center;
-            color: #7A5C48;
+            color: #ff6b00;
+            border-color: #ff6b00 !important;
+            background: rgba(255, 107, 0, 0.03);
+        }
+        .btn-primary-orange {
+            background: #ff6b00 !important;
+            border-color: #ff6b00 !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(255, 107, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+        .btn-primary-orange:hover {
+            background: #e05e00 !important;
+            box-shadow: 0 6px 18px rgba(255, 107, 0, 0.4);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -75,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-page">
     <div class="auth-card" style="max-width: 460px;">
         <div class="auth-logo">
-            <span class="logo-icon"><i class="fa-solid fa-shield-halved" style="color: #A67C52;"></i></span>
+            <span class="logo-icon"><i class="fa-solid fa-shield-halved" style="color: #ff6b00;"></i></span>
             <h1>Verify OTP Code</h1>
             <p>Enter the 6-digit OTP sent to your registered email</p>
         </div>
@@ -89,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" action="">
             <div class="form-group">
                 <label class="form-label">Registered Email</label>
-                <input type="email" name="email" class="form-control" value="<?= h($email) ?>" required readonly style="background:rgba(0,0,0,0.04);">
+                <input type="email" name="email" class="form-control" value="<?= h($email) ?>" required readonly style="background:rgba(0,0,0,0.04); border-color:#cbd5e1;">
             </div>
 
             <div class="form-group">
@@ -99,26 +114,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label class="form-label">New Password</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required style="border-color:#cbd5e1;">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Confirm New Password</label>
-                <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required>
+                <input type="password" name="confirm_password" class="form-control" placeholder="••••••••" required style="border-color:#cbd5e1;">
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block" style="background:#A67C52; border-color:#A67C52; font-weight:600; padding:12px;">
+            <button type="submit" class="btn btn-block btn-primary-orange" style="padding:12px;">
                 Reset Password ✅
             </button>
         </form>
 
         <div style="margin-top:20px; text-align:center; font-size:0.85rem;">
             <span>Didn't receive code? </span>
-            <a href="forgot_password.php" style="color:#A67C52; font-weight:600; text-decoration:underline;">Resend OTP</a>
+            <a href="forgot_password.php" style="color:#ff6b00; font-weight:600; text-decoration:underline;">Resend OTP</a>
         </div>
 
         <div class="divider"><span>Or</span></div>
-        <a href="login.php" class="btn btn-outline btn-block" style="justify-content:center;">← Back to Login</a>
+        <a href="login.php" class="btn btn-outline btn-block" style="justify-content:center; border-color:#cbd5e1; color:#475569; font-weight:600;">← Back to Login</a>
     </div>
 </div>
 </body>
