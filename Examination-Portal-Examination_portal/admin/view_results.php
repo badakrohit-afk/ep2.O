@@ -5,7 +5,7 @@ require_once dirname(__DIR__) . '/includes/functions.php';
 require_role('faculty','admin');
 
 $user_id  = (int)$_SESSION['user_id'];
-$my_exams = ($_SESSION['role'] === 'admin') ? get_all_exams() : get_exams_by_creator($user_id);
+$my_exams = (get_role() === 'admin') ? get_all_exams() : get_exams_by_creator($user_id);
 $exam_id  = (int)($_GET['exam_id'] ?? 0);
 $exam     = $exam_id ? get_exam_by_id($exam_id) : null;
 $results  = $exam_id ? get_exam_results($exam_id) : [];

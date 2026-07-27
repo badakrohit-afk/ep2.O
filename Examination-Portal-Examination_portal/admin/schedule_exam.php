@@ -6,7 +6,7 @@ require_role('faculty', 'admin');
 
 global $pdo;
 $user_id  = (int)$_SESSION['user_id'];
-$is_admin = ($_SESSION['role'] === 'admin' || ($_SESSION['user_role'] ?? '') === 'admin');
+$is_admin = (get_role() === 'admin');
 
 // Super Admin sees ALL exams system-wide (created by any Faculty or Admin)
 $my_exams = $is_admin ? get_all_exams() : get_exams_by_creator($user_id);

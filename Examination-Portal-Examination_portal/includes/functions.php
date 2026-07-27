@@ -9,6 +9,7 @@ function login_user(array $user): void {
     $_SESSION['user_name'] = $user['name'];
     $_SESSION['user_email']= $user['email'];
     $_SESSION['user_role'] = $user['role'];
+    $_SESSION['role']      = $user['role'];
     session_regenerate_id(true);
 }
 
