@@ -77,7 +77,6 @@ require_once dirname(__DIR__) . '/includes/header.php';
                         </div>
                     </td>
                     <td style="font-size:0.8rem;color:var(--text-muted);"><?= format_datetime($s['last_activity']) ?></td>
-                    <td><a href="feedback.php?student_id=<?= $s['id'] ?>" class="btn btn-outline btn-sm">💬 Feedback</a></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>

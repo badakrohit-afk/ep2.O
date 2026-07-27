@@ -89,9 +89,6 @@ check_and_send_deadline_reminders();
             <a href="<?= BASE_URL ?>/faculty/view_progress.php" class="nav-link <?= (basename($_SERVER['PHP_SELF'])==='view_progress.php')?'active':'' ?>">
                 <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span> Student Progress
             </a>
-            <a href="<?= BASE_URL ?>/faculty/feedback.php" class="nav-link <?= (basename($_SERVER['PHP_SELF'])==='feedback.php')?'active':'' ?>">
-                <span class="nav-icon"><i class="fa-solid fa-comments"></i></span> Feedback
-            </a>
         <?php elseif ($role === 'admin'): ?>
             <a href="<?= BASE_URL ?>/admin/dashboard.php" class="nav-link <?= (basename($_SERVER['PHP_SELF'])==='dashboard.php')?'active':'' ?>">
                 <span class="nav-icon"><i class="fa-solid fa-house"></i></span> Dashboard
