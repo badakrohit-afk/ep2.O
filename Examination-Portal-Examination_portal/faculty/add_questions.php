@@ -302,12 +302,12 @@ document.getElementById('edit-modal').addEventListener('click', function(e){if(e
 
 <!-- Import Excel / CSV Modal -->
 <div id="importExcelModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
-    <div style="background:#ffffff; border-radius:16px; width:100%; max-width:540px; box-shadow:0 20px 40px rgba(0,0,0,0.25); overflow:hidden; border:1px solid #e2e8f0; animation:fadeIn 0.25s ease;">
+    <div style="background:#ffffff; border-radius:16px; width:100%; max-width:560px; box-shadow:0 20px 40px rgba(0,0,0,0.25); overflow:hidden; border:1px solid #e2e8f0; animation:fadeIn 0.25s ease;">
         
         <!-- Modal Header -->
         <div style="background:#1e293b; color:#ffffff; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
             <h3 style="margin:0; font-size:1.15rem; font-weight:600; display:flex; align-items:center; gap:8px;">
-                <span>📥</span> Import Questions from Excel / CSV
+                <span>📥</span> Import Questions to Exam
             </h3>
             <button type="button" onclick="closeImportExcelModal()" style="background:none; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer; line-height:1; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
         </div>
@@ -316,37 +316,60 @@ document.getElementById('edit-modal').addEventListener('click', function(e){if(e
         <div style="padding:24px; color:#1e293b;">
             
             <!-- Sample Download Template -->
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #FF6B00; border-radius:10px; padding:14px 16px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #FF6B00; border-radius:10px; padding:12px 16px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
                 <div>
-                    <strong style="color:#1e293b; font-size:0.9rem;">Need a sample file?</strong>
-                    <p style="margin:2px 0 0 0; color:#64748b; font-size:0.8rem;">Download template with pre-filled columns</p>
+                    <strong style="color:#1e293b; font-size:0.88rem;">Download Sample Format</strong>
+                    <p style="margin:2px 0 0 0; color:#64748b; font-size:0.78rem;">Use CSV template with standard columns</p>
                 </div>
-                <a href="<?= BASE_URL ?>/api/download_sample_template.php" class="btn btn-sm" style="background:#fff; border:1.5px solid #FF6B00; color:#FF6B00; font-weight:600; font-size:0.82rem; text-decoration:none; padding:6px 14px; border-radius:8px;">
+                <a href="<?= BASE_URL ?>/api/download_sample_template.php" class="btn btn-sm" style="background:#fff; border:1.5px solid #FF6B00; color:#FF6B00; font-weight:600; font-size:0.82rem; text-decoration:none; padding:6px 12px; border-radius:8px;">
                     ⬇️ Download Template
                 </a>
             </div>
 
-            <!-- File Drop Zone -->
+            <!-- Import Tabs -->
+            <div style="display:flex; border-bottom:2px solid #e2e8f0; margin-bottom:18px; gap:8px;">
+                <button type="button" id="tab_btn_file" onclick="switchImportTab('file')" style="padding:8px 16px; border:none; background:none; font-weight:600; color:#FF6B00; border-bottom:3px solid #FF6B00; cursor:pointer; font-size:0.9rem;">
+                    📁 File Upload (.xlsx, .csv)
+                </button>
+                <button type="button" id="tab_btn_paste" onclick="switchImportTab('paste')" style="padding:8px 16px; border:none; background:none; font-weight:600; color:#64748b; border-bottom:3px solid transparent; cursor:pointer; font-size:0.9rem;">
+                    📋 Copy & Paste Text
+                </button>
+            </div>
+
             <form id="importExcelForm" enctype="multipart/form-data" onsubmit="handleImportExcelSubmit(event)">
                 <input type="hidden" name="exam_id" value="<?= (int)$exam_id ?>">
                 
-                <div id="excel_dropzone" style="border:2px dashed #cbd5e1; border-radius:12px; padding:30px 20px; text-align:center; background:#fafafa; cursor:pointer; transition:all 0.2s;" onclick="document.getElementById('excel_file_input').click()" ondragover="event.preventDefault(); this.style.borderColor='#FF6B00'; this.style.background='rgba(255,107,0,0.04)';" ondragleave="this.style.borderColor='#cbd5e1'; this.style.background='#fafafa';" ondrop="handleExcelFileDrop(event)">
-                    
-                    <div style="font-size:2.5rem; margin-bottom:8px;">📊</div>
-                    <p style="margin:0; font-weight:600; color:#334155; font-size:0.95rem;">Click to upload or drag & drop</p>
-                    <p style="margin:4px 0 0 0; color:#94a3b8; font-size:0.8rem;">Supports .xlsx, .xls, or .csv files</p>
-                    
-                    <input type="file" id="excel_file_input" name="excel_file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="handleExcelFileSelect(this)">
-                    
-                    <div id="excel_file_info" style="display:none; margin-top:12px; padding:8px 12px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; align-items:center; gap:8px; color:#FF6B00; font-weight:600; font-size:0.85rem;">
-                        <span id="excel_file_name">selected_file.xlsx</span>
+                <!-- Tab 1: File Upload -->
+                <div id="tab_content_file">
+                    <div id="excel_dropzone" style="border:2px dashed #FF6B00; border-radius:12px; padding:24px 16px; text-align:center; background:rgba(255,107,0,0.02); cursor:pointer; transition:all 0.2s;" onclick="document.getElementById('excel_file_input').click()" ondragover="event.preventDefault(); this.style.background='rgba(255,107,0,0.08)';" ondragleave="this.style.background='rgba(255,107,0,0.02)';" ondrop="handleExcelFileDrop(event)">
+                        
+                        <div style="font-size:2.2rem; margin-bottom:6px;">📊</div>
+                        <button type="button" class="btn btn-sm" style="background:#FF6B00; color:#fff; font-weight:600; border:none; padding:8px 18px; border-radius:8px; margin-bottom:6px; cursor:pointer;">
+                            Choose Excel or CSV File
+                        </button>
+                        <p style="margin:4px 0 0 0; color:#64748b; font-size:0.8rem;">or drag and drop your file here (.xlsx, .xls, .csv)</p>
+                        
+                        <input type="file" id="excel_file_input" name="excel_file" accept=".xlsx,.xls,.csv,.txt" style="display:none;" onchange="handleExcelFileSelect(this)">
                     </div>
+
+                    <div id="excel_file_info" style="display:none; margin-top:12px; padding:10px 14px; background:#fff; border:1.5px solid #FF6B00; border-radius:8px; align-items:center; justify-content:space-between; color:#1e293b; font-weight:600; font-size:0.85rem;">
+                        <span id="excel_file_name">selected_file.xlsx</span>
+                        <span style="color:#059669; font-size:0.8rem;">✓ Ready</span>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Copy Paste Text -->
+                <div id="tab_content_paste" style="display:none;">
+                    <label style="display:block; font-size:0.82rem; color:#475569; margin-bottom:6px; font-weight:600;">
+                        Paste table rows copied from Excel or Google Sheets:
+                    </label>
+                    <textarea name="pasted_text" id="pasted_text_input" rows="6" class="form-control" placeholder="Question	Option A	Option B	Option C	Option D	Answer	Marks&#10;What is PHP?	Programming Language	Database	Browser	OS	A	1" style="font-size:0.82rem; font-family:monospace; line-height:1.4; border-color:#cbd5e1;"></textarea>
                 </div>
 
                 <!-- Progress Bar -->
                 <div id="import_progress_container" style="display:none; margin-top:16px;">
                     <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#64748b; margin-bottom:6px;">
-                        <span>Uploading & Parsing file...</span>
+                        <span>Uploading & Processing questions...</span>
                         <span id="import_progress_percent">0%</span>
                     </div>
                     <div style="background:#e2e8f0; border-radius:99px; height:8px; overflow:hidden;">
@@ -358,7 +381,7 @@ document.getElementById('edit-modal').addEventListener('click', function(e){if(e
                 <div id="import_result_box" style="display:none; margin-top:16px; border-radius:10px; padding:14px; font-size:0.85rem;"></div>
 
                 <!-- Modal Footer Actions -->
-                <div style="margin-top:24px; display:flex; justify-content:flex-end; gap:12px;">
+                <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:12px;">
                     <button type="button" onclick="closeImportExcelModal()" class="btn btn-outline" style="border-color:#cbd5e1; color:#475569;">Cancel</button>
                     <button type="submit" id="btn_import_submit" class="btn" style="background:#FF6B00; color:#fff; font-weight:600; padding:10px 24px; border:none; border-radius:8px; cursor:pointer;">
                         🚀 Start Import
@@ -370,6 +393,32 @@ document.getElementById('edit-modal').addEventListener('click', function(e){if(e
 </div>
 
 <script>
+let currentImportTab = 'file';
+
+function switchImportTab(tab) {
+    currentImportTab = tab;
+    const btnFile = document.getElementById('tab_btn_file');
+    const btnPaste = document.getElementById('tab_btn_paste');
+    const contentFile = document.getElementById('tab_content_file');
+    const contentPaste = document.getElementById('tab_content_paste');
+
+    if (tab === 'file') {
+        btnFile.style.color = '#FF6B00';
+        btnFile.style.borderBottomColor = '#FF6B00';
+        btnPaste.style.color = '#64748b';
+        btnPaste.style.borderBottomColor = 'transparent';
+        contentFile.style.display = 'block';
+        contentPaste.style.display = 'none';
+    } else {
+        btnPaste.style.color = '#FF6B00';
+        btnPaste.style.borderBottomColor = '#FF6B00';
+        btnFile.style.color = '#64748b';
+        btnFile.style.borderBottomColor = 'transparent';
+        contentPaste.style.display = 'block';
+        contentFile.style.display = 'none';
+    }
+}
+
 function openImportExcelModal() {
     document.getElementById('importExcelModal').style.display = 'flex';
 }
@@ -381,13 +430,12 @@ function closeImportExcelModal() {
 function handleExcelFileSelect(input) {
     if (input.files && input.files[0]) {
         document.getElementById('excel_file_name').innerText = '📄 ' + input.files[0].name;
-        document.getElementById('excel_file_info').style.display = 'inline-flex';
+        document.getElementById('excel_file_info').style.display = 'flex';
     }
 }
 function handleExcelFileDrop(e) {
     e.preventDefault();
-    document.getElementById('excel_dropzone').style.borderColor = '#cbd5e1';
-    document.getElementById('excel_dropzone').style.background = '#fafafa';
+    document.getElementById('excel_dropzone').style.background = 'rgba(255,107,0,0.02)';
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
         const input = document.getElementById('excel_file_input');
         input.files = e.dataTransfer.files;
@@ -397,8 +445,14 @@ function handleExcelFileDrop(e) {
 function handleImportExcelSubmit(e) {
     e.preventDefault();
     const fileInput = document.getElementById('excel_file_input');
-    if (!fileInput.files || !fileInput.files[0]) {
-        alert('Please select an Excel or CSV file to upload.');
+    const pasteInput = document.getElementById('pasted_text_input');
+
+    if (currentImportTab === 'file' && (!fileInput.files || !fileInput.files[0])) {
+        alert('Please click "Choose Excel or CSV File" to select a file.');
+        return;
+    }
+    if (currentImportTab === 'paste' && (!pasteInput.value || !pasteInput.value.trim())) {
+        alert('Please paste your questions text into the box.');
         return;
     }
 
@@ -411,8 +465,8 @@ function handleImportExcelSubmit(e) {
     btn.disabled = true;
     btn.innerText = 'Importing...';
     progressBox.style.display = 'block';
-    progressBar.style.width = '40%';
-    progressPercent.innerText = '40%';
+    progressBar.style.width = '50%';
+    progressPercent.innerText = '50%';
     resultBox.style.display = 'none';
 
     const formData = new FormData(document.getElementById('importExcelForm'));
