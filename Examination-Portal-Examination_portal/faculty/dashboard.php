@@ -35,10 +35,7 @@ $page_title = 'Faculty Dashboard';
 require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
-<div class="page-header">
-    <h2>⚙️ System Overview</h2>
-    <p>Portal overview panel. Monitor system usage, users and examinations.</p>
-</div>
+
 
 <?php $flash_e = get_flash('error'); if ($flash_e): ?>
     <div class="alert alert-error">❌ <?= h($flash_e) ?></div>
