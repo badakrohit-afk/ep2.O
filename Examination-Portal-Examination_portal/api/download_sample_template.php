@@ -1,17 +1,25 @@
 <?php
-// api/download_sample_template.php — Download Editable Sample Questions CSV / Excel Template
+// api/download_sample_template.php — Download Clean Editable Sample Questions Excel / CSV Template
+ini_set('display_errors', '0');
+error_reporting(0);
+while (ob_get_level()) {
+    ob_end_clean();
+}
+
 require_once dirname(__DIR__) . '/config.php';
 
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename="questions_import_template.csv"');
+header('Pragma: no-cache');
+header('Expires: 0');
 
-// Output UTF-8 BOM for Excel compatibility
+// Output UTF-8 BOM so Excel and Numbers open it as a pristine table
 echo "\xEF\xBB\xBF";
 
 $output = fopen('php://output', 'w');
 
 // Header row
-fputcsv($output, ['Question', 'Option A', 'Option B', 'Option C', 'Option D', 'Correct Answer (A-D)', 'Marks']);
+fputcsv($output, ['Question', 'Option A', 'Option B', 'Option C', 'Option D', 'Correct Answer (A-D)', 'Marks'], ',', '"', '\\');
 
 $sample_data = [
     [
@@ -107,7 +115,7 @@ $sample_data = [
 ];
 
 foreach ($sample_data as $row) {
-    fputcsv($output, $row);
+    fputcsv($output, $row, ',', '"', '\\');
 }
 
 fclose($output);
