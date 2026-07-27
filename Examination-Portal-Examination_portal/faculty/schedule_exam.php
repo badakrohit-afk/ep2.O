@@ -35,56 +35,13 @@ $page_title = 'Schedule Exam';
 require_once dirname(__DIR__) . '/includes/header.php';
 ?>
 
-<style>
-/* Chakravyuh Animation Styles */
-.add-exam-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 48px;
-    background: #1e1e2d;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    z-index: 100;
-    min-width: 160px;
-    overflow: hidden;
-}
-.add-exam-menu.show-menu {
-    display: block !important;
-}
-</style>
-
 <div class="page-header flex-between">
     <div>
         <h2>📅 Schedule Exam</h2>
         <p>Set the date, time and duration for your exams</p>
     </div>
-    <div style="position: relative; display: inline-block;">
-        <button onclick="toggleAddExamMenu(event)" class="btn btn-primary" style="border-radius: 50px; padding: 10px 24px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; height: 42px; background: #A67C52; border: none; cursor: pointer; color: #fff;">
-            <span>+ Add Exam</span>
-        </button>
-        <div id="add-exam-menu" class="add-exam-menu">
-            <a href="create_exam.php" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">
-                <span>📝</span> Quiz Exam
-            </a>
-            <a href="manage_coding_problems.php" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; color: #fff; text-decoration: none; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.1); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">
-                <span>💻</span> Coding Exam
-            </a>
-        </div>
-    </div>
+    <a href="create_exam.php" class="btn btn-primary btn-sm" style="background:#FF6B00; border:none; color:#ffffff; font-weight:600;">+ Add Exam</a>
 </div>
-<script>
-function toggleAddExamMenu(e) {
-    e.stopPropagation();
-    const menu = document.getElementById('add-exam-menu');
-    menu.classList.toggle('show-menu');
-}
-document.addEventListener('click', function() {
-    const menu = document.getElementById('add-exam-menu');
-    if (menu) menu.classList.remove('show-menu');
-});
-</script>
 
 <!-- Exam Selector -->
 <div class="card mb-24">
