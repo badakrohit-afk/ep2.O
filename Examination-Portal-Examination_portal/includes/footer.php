@@ -240,43 +240,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.classList.add('dark-mode');
     }
     updateThemeUI(isDark);
-
-    // Interactive Brightening Animation & Light Wave Aura for Stat Cards and Nav Tabs
-    document.querySelectorAll('.stat-card, .nav-link').forEach(element => {
-        element.addEventListener('click', function(e) {
-            // Trigger flash brightening animation
-            this.classList.remove('brightening');
-            void this.offsetWidth; // Trigger DOM reflow to restart animation
-            this.classList.add('brightening');
-
-            // Create radial light wave aura at exact click coordinates
-            const rect = this.getBoundingClientRect();
-            const aura = document.createElement('span');
-            aura.className = 'click-bright-aura';
-            aura.style.left = (e.clientX - rect.left) + 'px';
-            aura.style.top = (e.clientY - rect.top) + 'px';
-
-            this.appendChild(aura);
-
-            setTimeout(() => {
-                aura.remove();
-            }, 700);
-
-            // Smooth delay for inline location.href navigation so user sees the brightening animation
-            const onclickAttr = this.getAttribute('onclick');
-            if (onclickAttr && onclickAttr.includes('location.href')) {
-                e.preventDefault();
-                e.stopPropagation();
-                const match = onclickAttr.match(/location\.href\s*=\s*['"]([^'"]+)['"]/);
-                if (match && match[1]) {
-                    const targetUrl = match[1];
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 200);
-                }
-            }
-        }, true);
-    });
 });
 
 function toggleNotifications() {

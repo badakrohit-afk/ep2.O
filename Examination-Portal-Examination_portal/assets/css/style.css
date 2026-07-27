@@ -152,13 +152,6 @@ body {
     transform: translateX(4px);
     box-shadow: 0 4px 12px rgba(255,107,0,0.15);
 }
-.nav-link:active,
-.nav-link.brightening {
-    transform: scale(0.96) translateX(2px);
-    filter: brightness(1.35);
-    background: rgba(255,107,0,0.25);
-    box-shadow: 0 0 20px rgba(255,107,0,0.4);
-}
 .nav-link.active {
     background: #FF6B00; /* Vibrant Orange */
     color: #ffffff;
@@ -497,89 +490,6 @@ body {
 }
 .stat-card.pink:hover {
     box-shadow: 0 14px 28px -6px rgba(236, 72, 153, 0.35), 0 0 0 1px rgba(236, 72, 153, 0.4);
-}
-
-/* Click / Active Brightening Flash Animation */
-.stat-card:active,
-.stat-card.brightening {
-    animation: card-bright-flash 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
-}
-
-.stat-card.purple:active, .stat-card.purple.brightening {
-    box-shadow: 0 0 35px 8px rgba(139, 92, 246, 0.65), 0 0 15px rgba(139, 92, 246, 0.8);
-    background: linear-gradient(135deg, var(--bg-card), rgba(139, 92, 246, 0.35));
-}
-.stat-card.teal:active, .stat-card.teal.brightening {
-    box-shadow: 0 0 35px 8px rgba(255, 107, 0, 0.65), 0 0 15px rgba(255, 107, 0, 0.8);
-    background: linear-gradient(135deg, var(--bg-card), rgba(255, 107, 0, 0.35));
-}
-.stat-card.green:active, .stat-card.green.brightening {
-    box-shadow: 0 0 35px 8px rgba(16, 185, 129, 0.65), 0 0 15px rgba(16, 185, 129, 0.8);
-    background: linear-gradient(135deg, var(--bg-card), rgba(16, 185, 129, 0.35));
-}
-.stat-card.amber:active, .stat-card.amber.brightening {
-    box-shadow: 0 0 35px 8px rgba(245, 158, 11, 0.65), 0 0 15px rgba(245, 158, 11, 0.8);
-    background: linear-gradient(135deg, var(--bg-card), rgba(245, 158, 11, 0.35));
-}
-.stat-card.red:active, .stat-card.red.brightening {
-    box-shadow: 0 0 35px 8px rgba(239, 68, 68, 0.65), 0 0 15px rgba(239, 68, 68, 0.8);
-    background: linear-gradient(135deg, var(--bg-card), rgba(239, 68, 68, 0.35));
-}
-.stat-card.pink:active, .stat-card.pink.brightening {
-    box-shadow: 0 0 35px 8px rgba(236, 72, 153, 0.65), 0 0 15px rgba(236, 72, 153, 0.8);
-    background: linear-gradient(135deg, var(--bg-card), rgba(236, 72, 153, 0.35));
-}
-
-@keyframes stat-card-sweep {
-    0% { left: -70%; opacity: 0; }
-    30% { opacity: 0.8; }
-    100% { left: 140%; opacity: 0; }
-}
-
-@keyframes card-bright-flash {
-    0% {
-        filter: brightness(1) contrast(1);
-        transform: scale(0.97);
-    }
-    35% {
-        filter: brightness(1.5) contrast(1.2) saturate(1.35);
-        transform: scale(1.04);
-    }
-    70% {
-        filter: brightness(1.25) saturate(1.2);
-        transform: scale(1.02);
-    }
-    100% {
-        filter: brightness(1.1);
-        transform: scale(1);
-    }
-}
-
-/* Light Wave Aura Effect */
-.click-bright-aura {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%) scale(0);
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.6) 40%, transparent 80%);
-    animation: aura-expand 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-    z-index: 10;
-}
-
-@keyframes aura-expand {
-    0% {
-        width: 0px;
-        height: 0px;
-        opacity: 0.95;
-    }
-    50% {
-        opacity: 0.75;
-    }
-    100% {
-        width: 500px;
-        height: 500px;
-        opacity: 0;
-    }
 }
 
 .stat-icon { font-size: 2.2rem; flex-shrink: 0; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
