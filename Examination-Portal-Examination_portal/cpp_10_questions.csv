@@ -1,0 +1,11 @@
+Question,"Option A","Option B","Option C","Option D","Correct Answer (A-D)",Marks
+"Which of the following is the correct syntax to output ""Hello World"" in C++?","cout << ""Hello World"";","Console.WriteLine(""Hello World"");","System.out.println(""Hello World"");","print(""Hello World"");",A,1
+"Which header file is required for standard C++ input and output operations (cin/cout)?",<stdio.h>,<iostream>,<stdlib.h>,<conio.h>,B,1
+"What is the standard size of int data type in standard 32-bit/64-bit C++ compilers?","2 Bytes","4 Bytes","8 Bytes","1 Byte",B,1
+"Which feature of C++ Object Oriented Programming allows creating a new class from an existing class?",Polymorphism,Encapsulation,Inheritance,Abstraction,C,1
+"Which operator is used to allocate memory dynamically in C++?",malloc,alloc,new,create,C,1
+"Which keyword is used to define an unmodifiable constant variable in C++?",constant,final,const,static,C,1
+"Which access specifier makes class members accessible only within the same class definition?",public,protected,private,internal,C,1
+"What is the default required return type of the main() entry function in C++?",void,int,float,char,B,1
+"Which operator keyword is used to deallocate dynamic memory allocated with new in C++?",free(),delete,remove(),clear(),B,1
+"Which C++ concept allows multiple functions with the same name but different parameter lists?","Function Overloading","Function Overriding","Virtual Functions","Friend Functions",A,1
