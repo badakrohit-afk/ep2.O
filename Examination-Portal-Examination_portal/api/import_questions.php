@@ -47,7 +47,17 @@ if (!empty($_POST['pasted_text'])) {
 elseif (!empty($_FILES['excel_file']['tmp_name']) && $_FILES['excel_file']['error'] === UPLOAD_ERR_OK) {
     $file_tmp  = $_FILES['excel_file']['tmp_name'];
     $file_name = $_FILES['excel_file']['name'];
+    $file_size = $_FILES['excel_file']['size'] ?? 0;
     $file_ext  = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    // Enforce 10 MB file size limit (10 * 1024 * 1024 bytes)
+    if ($file_size > 10 * 1024 * 1024) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'File size exceeds the 10 MB limit. Please upload a file smaller than 10 MB.'
+        ]);
+        exit;
+    }
 
     if (in_array($file_ext, ['csv', 'txt'])) {
         $content = file_get_contents($file_tmp);

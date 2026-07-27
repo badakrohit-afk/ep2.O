@@ -429,7 +429,15 @@ function closeImportExcelModal() {
 }
 function handleExcelFileSelect(input) {
     if (input.files && input.files[0]) {
-        document.getElementById('excel_file_name').innerText = '📄 ' + input.files[0].name;
+        const file = input.files[0];
+        if (file.size > 10 * 1024 * 1024) {
+            alert('❌ File size exceeds the 10 MB limit. Please choose a file smaller than 10 MB.');
+            input.value = '';
+            document.getElementById('excel_file_info').style.display = 'none';
+            return;
+        }
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+        document.getElementById('excel_file_name').innerText = '📄 ' + file.name + ' (' + sizeMb + ' MB)';
         document.getElementById('excel_file_info').style.display = 'flex';
     }
 }
@@ -447,9 +455,15 @@ function handleImportExcelSubmit(e) {
     const fileInput = document.getElementById('excel_file_input');
     const pasteInput = document.getElementById('pasted_text_input');
 
-    if (currentImportTab === 'file' && (!fileInput.files || !fileInput.files[0])) {
-        alert('Please click "Choose Excel or CSV File" to select a file.');
-        return;
+    if (currentImportTab === 'file') {
+        if (!fileInput.files || !fileInput.files[0]) {
+            alert('Please click "Choose Excel or CSV File" to select a file.');
+            return;
+        }
+        if (fileInput.files[0].size > 10 * 1024 * 1024) {
+            alert('❌ Selected file exceeds the 10 MB limit. Please select a smaller file.');
+            return;
+        }
     }
     if (currentImportTab === 'paste' && (!pasteInput.value || !pasteInput.value.trim())) {
         alert('Please paste your questions text into the box.');
